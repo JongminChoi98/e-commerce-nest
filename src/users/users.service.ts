@@ -44,11 +44,34 @@ export class UserService {
       });
       await this.users.save(user);
 
-      return {
-        success: true,
-      };
+      return { success: true };
     } catch (error) {
       return { success: false, error: "Couldn't create account" };
+    }
+  }
+
+  async findById(id: number) {
+    try {
+      const user = await this.users.findOne({ where: { id } });
+      if (user) {
+        return { success: true, user };
+      }
+
+      return { success: false, error: "Couldn't find account" };
+    } catch (error) {
+      return { success: false, error: 'Unknown error has occurred.' };
+    }
+  }
+
+  async findByEmail(email: string) {
+    try {
+      const user = await this.users.findOne({ where: { email } });
+      if (user) {
+        return { success: true, user };
+      }
+      return { success: false, error: "Couldn't find account" };
+    } catch (error) {
+      return { success: false, error: 'Unknown error has occurred.' };
     }
   }
 }
