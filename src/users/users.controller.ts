@@ -6,6 +6,7 @@ import {
 } from './dtos/create-account.dto';
 import JwtAuthGuard from 'src/auth/guard/jwt-auth.guard';
 import RequestWithUser from 'src/auth/interfaces/requestWithUser.interface';
+import { UserOutputDto } from './dtos/user.dto';
 
 @Controller('users')
 export class UserController {
@@ -20,8 +21,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('')
-  getUser(@Req() request: RequestWithUser) {
-    const { user } = request;
-    return user;
+  getUser(@Req() request: RequestWithUser): Promise<UserOutputDto> {
+    return this.usersService.profile(request);
   }
 }

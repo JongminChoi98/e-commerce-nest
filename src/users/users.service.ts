@@ -6,6 +6,8 @@ import {
   CreateUserInputDto,
   CreateUserOutputDto,
 } from './dtos/create-account.dto';
+import RequestWithUser from 'src/auth/interfaces/requestWithUser.interface';
+import { UserOutputDto } from './dtos/user.dto';
 
 @Injectable()
 export class UserService {
@@ -19,20 +21,13 @@ export class UserService {
     password,
     firstName,
     lastName,
-    phone,
+    phone = '',
   }: CreateUserInputDto): Promise<CreateUserOutputDto> {
     try {
       const exists = await this.users.findOne({ where: { email } });
 
       if (exists) {
-        return {
-          success: false,
-          error: 'There is a user with that email already',
-        };
-      }
-
-      if (!phone) {
-        phone = '';
+        return { success: false, error: 'User already exists' };
       }
 
       const user = this.users.create({
@@ -50,7 +45,7 @@ export class UserService {
     }
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<UserOutputDto> {
     try {
       const user = await this.users.findOne({ where: { id } });
       if (user) {
@@ -63,13 +58,21 @@ export class UserService {
     }
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<UserOutputDto> {
     try {
       const user = await this.users.findOne({ where: { email } });
       if (user) {
         return { success: true, user };
       }
       return { success: false, error: "Couldn't find account" };
+    } catch (error) {
+      return { success: false, error: 'Unknown error has occurred.' };
+    }
+  }
+  async profile(request: RequestWithUser): Promise<UserOutputDto> {
+    try {
+      const { user } = request;
+      return { success: true, user };
     } catch (error) {
       return { success: false, error: 'Unknown error has occurred.' };
     }

@@ -20,17 +20,17 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
-  signIn(@Req() request: RequestWithUser, @Res() response: Response) {
+  signIn(@Req() request: RequestWithUser, @Res() response: Response): Response {
     const { user } = request;
     const cookie = this.authService.getCookieWithJwtToken(user.id);
     response.setHeader('Set-Cookie', cookie);
-    return response.sendStatus(200);
+    return response.json({ success: true });
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('log-out')
-  async logOut(_: null, @Res() response: Response) {
+  async logOut(_: null, @Res() response: Response): Promise<Response> {
     response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
-    return response.sendStatus(200);
+    return response.json({ success: true });
   }
 }

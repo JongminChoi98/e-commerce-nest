@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/users/users.service';
+import { UserOutputDto } from 'src/users/dtos/user.dto';
+import { CoreOutput } from 'src/common/dtos/output.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +14,10 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  public async getAuthenticatedUser(email: string, plainTextPassword: string) {
+  public async getAuthenticatedUser(
+    email: string,
+    plainTextPassword: string,
+  ): Promise<UserOutputDto> {
     try {
       const { user } = await this.userService.findByEmail(email);
       const result = await this.verifyPassword(
@@ -34,7 +39,7 @@ export class AuthService {
   private async verifyPassword(
     plainTextPassword: string,
     hashedPassword: string,
-  ) {
+  ): Promise<CoreOutput> {
     const isPasswordMatching = await bcrypt.compare(
       plainTextPassword,
       hashedPassword,
