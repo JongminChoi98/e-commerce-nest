@@ -74,7 +74,7 @@ export class UserService {
       return { success: false, error: 'Unknown error has occurred.' };
     }
   }
-
+  
   async profile(request: RequestWithUser): Promise<UserOutputDto> {
     try {
       const { user } = request;
