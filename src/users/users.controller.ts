@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './users.service';
 import {
   CreateUserInputDto,
@@ -7,6 +15,10 @@ import {
 import JwtAuthGuard from 'src/auth/guard/jwt-auth.guard';
 import RequestWithUser from 'src/auth/interfaces/requestWithUser.interface';
 import { UserOutputDto } from './dtos/user.dto';
+import {
+  UpdateUserInputDto,
+  UpdateUserOutputDto,
+} from './dtos/edit-account.dto';
 
 @Controller('users')
 export class UserController {
@@ -23,5 +35,15 @@ export class UserController {
   @Get('')
   getUser(@Req() request: RequestWithUser): Promise<UserOutputDto> {
     return this.usersService.profile(request);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('')
+  updateUser(
+    @Req() request: RequestWithUser,
+    @Body() updateUserDto: UpdateUserInputDto,
+  ): Promise<UpdateUserOutputDto> {
+    const { id } = request.user;
+    return this.usersService.updateProfile(id, updateUserDto);
   }
 }
