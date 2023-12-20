@@ -8,11 +8,12 @@ import {
 } from './dtos/create-account.dto';
 import RequestWithUser from 'src/auth/interfaces/requestWithUser.interface';
 import { UserOutputDto } from './dtos/user.dto';
-import JwtAuthGuard from 'src/auth/guard/jwt-auth.guard';
 import {
   UpdateUserInputDto,
   UpdateUserOutputDto,
 } from './dtos/edit-account.dto';
+import { hashPassword } from 'src/utils/hash-password';
+import JwtAuthGuard from 'src/auth/guard/jwt-auth.guard';
 
 @Injectable()
 export class UserService {
@@ -34,6 +35,8 @@ export class UserService {
       if (exists) {
         return { success: false, error: 'User already exists' };
       }
+
+      password = await hashPassword(password);
 
       const user = this.users.create({
         email,
@@ -74,7 +77,7 @@ export class UserService {
       return { success: false, error: 'Unknown error has occurred.' };
     }
   }
-  
+
   async profile(request: RequestWithUser): Promise<UserOutputDto> {
     try {
       const { user } = request;
@@ -91,6 +94,10 @@ export class UserService {
     try {
       const user = await this.users.findOne({ where: { id: userId } });
       if (user) {
+        if (updateUserDto.password) {
+          updateUserDto.password = await hashPassword(updateUserDto.password);
+        }
+
         Object.assign(user, updateUserDto);
         await this.users.save(user);
 
