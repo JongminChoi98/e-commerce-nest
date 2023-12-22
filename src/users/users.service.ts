@@ -13,7 +13,6 @@ import {
   UpdateUserOutputDto,
 } from './dtos/edit-account.dto';
 import { hashPassword } from 'src/utils/hash-password';
-import JwtAuthGuard from 'src/auth/guard/jwt-auth.guard';
 
 @Injectable()
 export class UserService {
