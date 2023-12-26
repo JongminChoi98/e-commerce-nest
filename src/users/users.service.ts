@@ -54,35 +54,19 @@ export class UserService {
 
   async findById(id: number): Promise<UserOutputDto> {
     try {
-      const user = await this.users.findOne({ where: { id } });
-      if (user) {
-        return { success: true, user };
-      }
-
-      return { success: false, error: "Couldn't find account" };
+      const user = await this.users.findOneOrFail({ where: { id } });
+      return { success: true, user };
     } catch (error) {
-      return { success: false, error: 'Unknown error has occurred.' };
+      return { success: false, error: "Couldn't find user" };
     }
   }
 
   async findByEmail(email: string): Promise<UserOutputDto> {
     try {
-      const user = await this.users.findOne({ where: { email } });
-      if (user) {
-        return { success: true, user };
-      }
-      return { success: false, error: "Couldn't find account" };
-    } catch (error) {
-      return { success: false, error: 'Unknown error has occurred.' };
-    }
-  }
-
-  async profile(request: RequestWithUser): Promise<UserOutputDto> {
-    try {
-      const { user } = request;
+      const user = await this.users.findOneOrFail({ where: { email } });
       return { success: true, user };
     } catch (error) {
-      return { success: false, error: 'Unknown error has occurred.' };
+      return { success: false, error: "Couldn't find user" };
     }
   }
 
@@ -91,21 +75,17 @@ export class UserService {
     updateUserDto: UpdateUserInputDto,
   ): Promise<UpdateUserOutputDto> {
     try {
-      const user = await this.users.findOne({ where: { id: userId } });
-      if (user) {
-        if (updateUserDto.password) {
-          updateUserDto.password = await hashPassword(updateUserDto.password);
-        }
-
-        Object.assign(user, updateUserDto);
-        await this.users.save(user);
-
-        return { success: true };
-      } else {
-        return { success: false, error: "Couldn't find account" };
+      const user = await this.users.findOneOrFail({ where: { id: userId } });
+      if (updateUserDto.password) {
+        updateUserDto.password = await hashPassword(updateUserDto.password);
       }
+
+      Object.assign(user, updateUserDto);
+      await this.users.save(user);
+
+      return { success: true };
     } catch (error) {
-      return { success: false, error: 'Unknown error has occurred.' };
+      return { success: false, error: "Couldn't find user" };
     }
   }
 }

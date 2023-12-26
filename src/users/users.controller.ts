@@ -34,7 +34,8 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('')
   getUser(@Req() request: RequestWithUser): Promise<UserOutputDto> {
-    return this.usersService.profile(request);
+    const { user } = request;
+    return this.usersService.findById(user.id);
   }
 
   @UseGuards(JwtAuthGuard)
