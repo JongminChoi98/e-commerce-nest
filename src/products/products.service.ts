@@ -45,7 +45,7 @@ export class ProductService {
     }
   }
 
-  async searchtByName(params: PagenationOption): Promise<ProductOutputDto> {
+  async searchByName(params: PagenationOption): Promise<ProductOutputDto> {
     try {
       const products = await this.products
         .createQueryBuilder('product')
