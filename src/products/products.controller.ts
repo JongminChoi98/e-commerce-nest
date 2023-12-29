@@ -25,6 +25,6 @@ export class ProductController {
   async searchProduct(
     @Query() params: PagenationOption,
   ): Promise<ProductOutputDto> {
-    return this.productService.searchtByName(params);
+    return this.productService.searchByName(params);
   }
 }
