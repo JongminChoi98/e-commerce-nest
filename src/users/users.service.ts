@@ -6,7 +6,6 @@ import {
   CreateUserInputDto,
   CreateUserOutputDto,
 } from './dtos/create-account.dto';
-import RequestWithUser from 'src/auth/interfaces/requestWithUser.interface';
 import { UserOutputDto } from './dtos/user.dto';
 import {
   UpdateUserInputDto,

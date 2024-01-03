@@ -6,6 +6,7 @@ import { AddCartInputDto, AddCartOutputDto } from './dtos/add-cart.dto';
 import { Product } from 'src/products/entities/product.entity';
 import { ReadCartOutputDto } from './dtos/read-cart.dto';
 import { DeleteCartOutputDto } from './dtos/delete-cart.dto';
+import { UpdateCartOutputDto } from './dtos/update-cart-dto';
 
 @Injectable()
 export class CartService {
@@ -87,5 +88,19 @@ export class CartService {
     }
   }
 
-  //TODO: UPDATE Cart product
+  async updateCart(
+    cartId: number,
+    quantity: number,
+  ): Promise<UpdateCartOutputDto> {
+    try {
+      const cart = await this.carts.findOneOrFail({ where: { id: cartId } });
+
+      cart.quantity = quantity;
+      await this.carts.save(cart);
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'Unknown error has occurred.' };
+    }
+  }
 }

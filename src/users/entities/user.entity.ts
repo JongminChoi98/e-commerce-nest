@@ -1,4 +1,4 @@
-import { Cart } from 'src/cart/entities/cart-product.entity';
+import { Cart } from 'src/carts/entities/cart-product.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Entity, Column, OneToMany } from 'typeorm';
 

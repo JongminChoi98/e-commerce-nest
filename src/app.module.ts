@@ -9,8 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { ProductsModule } from './products/products.module';
 import { Product } from './products/entities/product.entity';
 import { ProductCategory } from './products/entities/product-category.entity';
-import { CartModule } from './cart/cart.module';
-import { Cart } from './cart/entities/cart-product.entity';
+import { CartModule } from './carts/cart.module';
+import { Cart } from './carts/entities/cart-product.entity';
 
 @Module({
   imports: [
@@ -38,8 +38,8 @@ import { Cart } from './cart/entities/cart-product.entity';
       database: process.env.DB_NAME,
       entities: [User, Product, ProductCategory, Cart],
       synchronize: true,
-      logging: false,
-      // process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
+      logging:
+        process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
     }),
     CommonModule,
     UsersModule,
