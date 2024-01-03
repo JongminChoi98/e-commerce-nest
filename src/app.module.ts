@@ -38,8 +38,8 @@ import { Cart } from './cart/entities/cart-product.entity';
       database: process.env.DB_NAME,
       entities: [User, Product, ProductCategory, Cart],
       synchronize: true,
-      logging:
-        process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
+      logging: false,
+      // process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
     }),
     CommonModule,
     UsersModule,
