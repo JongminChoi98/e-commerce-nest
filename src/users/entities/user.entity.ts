@@ -1,5 +1,6 @@
+import { Cart } from 'src/cart/entities/cart-product.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class User extends CoreEntity {
@@ -17,6 +18,9 @@ export class User extends CoreEntity {
 
   @Column()
   phone: string;
+
+  @OneToMany(() => Cart, (cart) => cart.user)
+  carts: Cart[];
 
   @Column('boolean', { default: 0 })
   hasAddress: boolean;
