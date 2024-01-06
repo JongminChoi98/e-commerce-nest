@@ -1,5 +1,6 @@
 import { Cart } from 'src/carts/entities/cart-product.entity';
 import { CoreEntity } from 'src/common/entities/core.entity';
+import { Payment } from 'src/payments/entities/payment.entity';
 import { Entity, Column, OneToMany } from 'typeorm';
 import { Address } from './user-address.entity';
 
