@@ -11,6 +11,7 @@ import { Product } from './products/entities/product.entity';
 import { ProductCategory } from './products/entities/product-category.entity';
 import { CartModule } from './carts/cart.module';
 import { Cart } from './carts/entities/cart-product.entity';
+import { Address } from './users/entities/user-address.entity';
 import { PaymentsModule } from './payments/payments.module';
 import { Payment } from './payments/entities/payment.entity';
 
@@ -38,7 +39,7 @@ import { Payment } from './payments/entities/payment.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Product, ProductCategory, Cart, Payment],
+      entities: [User, Product, ProductCategory, Cart, Payment, Address],
       synchronize: true,
       logging:
         process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
