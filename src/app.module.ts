@@ -14,6 +14,8 @@ import { Cart } from './carts/entities/cart-product.entity';
 import { Address } from './users/entities/user-address.entity';
 import { PaymentsModule } from './payments/payments.module';
 import { Payment } from './payments/entities/payment.entity';
+import { OrdersModule } from './orders/orders.module';
+import { OrderDetails, OrderItems } from './orders/entities/order.entity';
 
 @Module({
   imports: [
@@ -39,7 +41,16 @@ import { Payment } from './payments/entities/payment.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Product, ProductCategory, Cart, Payment, Address],
+      entities: [
+        User,
+        Product,
+        ProductCategory,
+        Cart,
+        Payment,
+        Address,
+        OrderItems,
+        OrderDetails,
+      ],
       synchronize: true,
       logging:
         process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
@@ -50,6 +61,7 @@ import { Payment } from './payments/entities/payment.entity';
     ProductsModule,
     CartModule,
     PaymentsModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
