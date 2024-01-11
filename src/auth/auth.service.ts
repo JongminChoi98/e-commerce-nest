@@ -50,7 +50,7 @@ export class AuthService {
     return { success: false, error: 'Invalid authentication information.' };
   }
 
-  public getCookieWithJwtToken(userId: number) {
+  public getCookieWithJwtToken(userId: any) {
     const payload: TokenPayload = { userId };
     const token = this.jwtService.sign(payload, {
       expiresIn: process.env.JWT_EXPIRATION_TIME,

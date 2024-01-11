@@ -12,10 +12,10 @@ export class Product extends CoreEntity {
   description: String;
 
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
-  price: Number;
+  price: number;
 
   @Column()
-  quantity: Number;
+  quantity: number;
 
   @ManyToOne(() => ProductCategory, (category) => category.products)
   category: ProductCategory;
