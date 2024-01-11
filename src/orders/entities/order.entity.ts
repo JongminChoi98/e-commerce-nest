@@ -15,8 +15,8 @@ export class OrderDetails extends CoreEntity {
   @Column()
   userId: number;
 
-  @Column()
-  status: string;
+  // @Column()
+  // status: string;
 
   @ManyToOne(() => User, (user) => user.orders)
   @JoinColumn({ name: 'userId' })
