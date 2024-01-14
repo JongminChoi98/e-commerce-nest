@@ -31,8 +31,12 @@ export class PaymentController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':pid(\\d+)')
-  deletePayment(@Param('pid') paymentId: number): Promise<CoreOutput> {
-    return this.paymentService.deleteUserPayment(paymentId);
+  deletePayment(
+    @Param('pid') paymentId: number,
+    @Req() request: RequestWithUser,
+  ): Promise<CoreOutput> {
+    const { id } = request.user;
+    return this.paymentService.deleteUserPayment(id, paymentId);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -39,11 +39,18 @@ export class PaymentService {
       return { success: false, error: 'Unknown error has occurred.' };
     }
   }
-  async deleteUserPayment(paymentId: number): Promise<CoreOutput> {
+  async deleteUserPayment(
+    userId: number,
+    paymentId: number,
+  ): Promise<CoreOutput> {
     try {
       const payment = await this.payments.findOne({ where: { id: paymentId } });
       if (!payment) {
         return { success: false, error: 'Payment method not exists' };
+      }
+
+      if (payment.userId !== userId) {
+        return { success: false, error: 'Not your wallet.' };
       }
 
       await this.payments
