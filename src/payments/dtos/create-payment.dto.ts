@@ -1,4 +1,3 @@
-import { CoreOutput } from 'src/common/dtos/output.dto';
 import { IsNotEmpty } from 'class-validator';
 
 export class CreatePaymentInputDto {

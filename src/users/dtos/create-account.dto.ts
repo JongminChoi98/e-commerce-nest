@@ -1,4 +1,3 @@
-import { CoreOutput } from 'src/common/dtos/output.dto';
 import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateUserInputDto {
@@ -17,5 +16,3 @@ export class CreateUserInputDto {
 
   phone?: string;
 }
-
-export class CreateUserOutputDto extends CoreOutput {}

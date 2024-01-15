@@ -11,18 +11,18 @@ export class OrdersController {
 
   @Get('')
   @UseGuards(JwtAuthGuard)
-  listOrders(@Req() request: RequestWithUser): Promise<OrderOutputDto> {
-    const { id } = request.user;
+  listOrders(
+    @Req() { user: { id } }: RequestWithUser,
+  ): Promise<OrderOutputDto> {
     return this.orderService.listOrderByUser(id);
   }
 
   @Post('')
   @UseGuards(JwtAuthGuard)
   createOrder(
-    @Req() request: RequestWithUser,
+    @Req() { user: { id } }: RequestWithUser,
     @Body() order: CreateOrderInputDto,
   ): Promise<CoreOutput> {
-    const { id } = request.user;
     return this.orderService.createOrder(id, order);
   }
 }

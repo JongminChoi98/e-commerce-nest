@@ -20,8 +20,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('sign-in')
-  signIn(@Req() request: RequestWithUser, @Res() response: Response): Response {
-    const { user } = request;
+  signIn(
+    @Req() { user }: RequestWithUser,
+    @Res() response: Response,
+  ): Response {
     const cookie = this.authService.getCookieWithJwtToken(user);
     response.setHeader('Set-Cookie', cookie);
     return response.json({ success: true });

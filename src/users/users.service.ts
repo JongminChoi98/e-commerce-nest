@@ -1,16 +1,10 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import {
-  CreateUserInputDto,
-  CreateUserOutputDto,
-} from './dtos/create-account.dto';
+import { CreateUserInputDto } from './dtos/create-account.dto';
 import { UserOutputDto } from './dtos/user.dto';
-import {
-  UpdateUserInputDto,
-  UpdateUserOutputDto,
-} from './dtos/edit-account.dto';
+import { UpdateUserInputDto } from './dtos/edit-account.dto';
 import { hashPassword } from 'src/utils/hash-password';
 import { CreateAddressInputDto } from './dtos/create-address.dto';
 import { CoreOutput } from 'src/common/dtos/output.dto';
@@ -34,7 +28,7 @@ export class UserService {
     firstName,
     lastName,
     phone = '',
-  }: CreateUserInputDto): Promise<CreateUserOutputDto> {
+  }: CreateUserInputDto): Promise<CoreOutput> {
     try {
       const exists = await this.users.findOne({ where: { email } });
 
@@ -80,7 +74,7 @@ export class UserService {
   async updateProfile(
     userId: number,
     updateUserDto: UpdateUserInputDto,
-  ): Promise<UpdateUserOutputDto> {
+  ): Promise<CoreOutput> {
     try {
       const user = await this.users.findOneOrFail({ where: { id: userId } });
       if (updateUserDto.password) {

@@ -1,4 +1,3 @@
-import { CoreOutput } from 'src/common/dtos/output.dto';
 import { IsNotEmpty } from 'class-validator';
 
 export class AddCartInputDto {
@@ -7,5 +6,3 @@ export class AddCartInputDto {
   @IsNotEmpty()
   productId: number;
 }
-
-export class AddCartOutputDto extends CoreOutput {}

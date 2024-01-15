@@ -9,17 +9,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './users.service';
-import {
-  CreateUserInputDto,
-  CreateUserOutputDto,
-} from './dtos/create-account.dto';
+import { CreateUserInputDto } from './dtos/create-account.dto';
 import JwtAuthGuard from 'src/auth/guard/jwt-auth.guard';
 import RequestWithUser from 'src/auth/interfaces/requestWithUser.interface';
 import { UserOutputDto } from './dtos/user.dto';
-import {
-  UpdateUserInputDto,
-  UpdateUserOutputDto,
-} from './dtos/edit-account.dto';
+import { UpdateUserInputDto } from './dtos/edit-account.dto';
 import { CreateAddressInputDto } from './dtos/create-address.dto';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { AddressOutputDto } from './dtos/address.dto';
@@ -30,60 +24,54 @@ export class UserController {
   constructor(private readonly usersService: UserService) {}
 
   @Post('signup')
-  async signup(
-    @Body() createUserDto: CreateUserInputDto,
-  ): Promise<CreateUserOutputDto> {
+  async signup(@Body() createUserDto: CreateUserInputDto): Promise<CoreOutput> {
     return this.usersService.signup(createUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('')
-  getUser(@Req() request: RequestWithUser): Promise<UserOutputDto> {
-    const { user } = request;
-    return this.usersService.findById(user.id);
+  getUser(@Req() { user: { id } }: RequestWithUser): Promise<UserOutputDto> {
+    return this.usersService.findById(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('')
   updateUser(
-    @Req() request: RequestWithUser,
+    @Req() { user: { id } }: RequestWithUser,
     @Body() updateUserDto: UpdateUserInputDto,
-  ): Promise<UpdateUserOutputDto> {
-    const { id } = request.user;
+  ): Promise<CoreOutput> {
     return this.usersService.updateProfile(id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('address')
   addAddress(
-    @Req() request: RequestWithUser,
+    @Req() { user: { id } }: RequestWithUser,
     @Body() addressDto: CreateAddressInputDto,
   ): Promise<CoreOutput> {
-    const { id } = request.user;
     return this.usersService.addAddress(addressDto, id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('address')
-  readAddress(@Req() request: RequestWithUser): Promise<AddressOutputDto> {
-    const { id } = request.user;
+  readAddress(
+    @Req() { user: { id } }: RequestWithUser,
+  ): Promise<AddressOutputDto> {
     return this.usersService.readAddress(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('address')
   updateAddress(
-    @Req() request: RequestWithUser,
+    @Req() { user: { id } }: RequestWithUser,
     @Body() updateAddressDto: UpdateAddressInputDto,
   ): Promise<CoreOutput> {
-    const { id } = request.user;
     return this.usersService.updateAddress(id, updateAddressDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('address')
-  deleteAddress(@Req() request: RequestWithUser): Promise<CoreOutput> {
-    const { id } = request.user;
+  deleteAddress(@Req() { user: { id } }: RequestWithUser): Promise<CoreOutput> {
     return this.usersService.deleteAddress(id);
   }
 }

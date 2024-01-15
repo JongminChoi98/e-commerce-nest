@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cart } from './entities/cart-product.entity';
 import { Repository } from 'typeorm';
-import { AddCartInputDto, AddCartOutputDto } from './dtos/add-cart.dto';
+import { AddCartInputDto } from './dtos/add-cart.dto';
 import { Product } from 'src/products/entities/product.entity';
 import { ReadCartOutputDto } from './dtos/read-cart.dto';
-import { DeleteCartOutputDto } from './dtos/delete-cart.dto';
-import { UpdateCartOutputDto } from './dtos/update-cart-dto';
+import { CoreOutput } from 'src/common/dtos/output.dto';
 
 @Injectable()
 export class CartService {
@@ -18,10 +17,7 @@ export class CartService {
     private products: Repository<Product>,
   ) {}
 
-  async addCart({
-    userId,
-    productId,
-  }: AddCartInputDto): Promise<AddCartOutputDto> {
+  async addCart({ userId, productId }: AddCartInputDto): Promise<CoreOutput> {
     try {
       const exists = await this.carts.findOne({
         where: { productId: productId },
@@ -65,10 +61,7 @@ export class CartService {
     }
   }
 
-  async deleteCart(
-    userId: number,
-    cartId: number,
-  ): Promise<DeleteCartOutputDto> {
+  async deleteCart(userId: number, cartId: number): Promise<CoreOutput> {
     try {
       const cart = await this.carts.findOneOrFail({ where: { id: cartId } });
       if (cart.userId !== userId) {
@@ -88,10 +81,7 @@ export class CartService {
     }
   }
 
-  async updateCart(
-    cartId: number,
-    quantity: number,
-  ): Promise<UpdateCartOutputDto> {
+  async updateCart(cartId: number, quantity: number): Promise<CoreOutput> {
     try {
       const cart = await this.carts.findOneOrFail({ where: { id: cartId } });
 

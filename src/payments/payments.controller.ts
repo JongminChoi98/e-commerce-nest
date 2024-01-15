@@ -22,10 +22,9 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @Post('')
   createPayment(
-    @Req() request: RequestWithUser,
+    @Req() { user: { id } }: RequestWithUser,
     @Body() createPaymentDto: CreatePaymentInputDto,
   ): Promise<CoreOutput> {
-    const { id } = request.user;
     return this.paymentService.createUserPayment(id, createPaymentDto);
   }
 
@@ -33,9 +32,8 @@ export class PaymentController {
   @Delete(':pid(\\d+)')
   deletePayment(
     @Param('pid') paymentId: number,
-    @Req() request: RequestWithUser,
+    @Req() { user: { id } }: RequestWithUser,
   ): Promise<CoreOutput> {
-    const { id } = request.user;
     return this.paymentService.deleteUserPayment(id, paymentId);
   }
 
@@ -43,16 +41,14 @@ export class PaymentController {
   @Get(':pid(\\d+)')
   getPayment(
     @Param('pid') paymentId: number,
-    @Req() request: RequestWithUser,
+    @Req() { user: { id } }: RequestWithUser,
   ): Promise<PaymentOutputDto> {
-    const { id } = request.user;
     return this.paymentService.getUserPayment(id, paymentId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('')
-  getPayments(@Req() request: RequestWithUser) {
-    const { id } = request.user;
+  getPayments(@Req() { user: { id } }: RequestWithUser) {
     return this.paymentService.getUserPayments(id);
   }
 }

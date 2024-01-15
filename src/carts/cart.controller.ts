@@ -12,8 +12,9 @@ import {
 import { CartService } from './cart.service';
 import JwtAuthGuard from 'src/auth/guard/jwt-auth.guard';
 import RequestWithUser from 'src/auth/interfaces/requestWithUser.interface';
-import { AddCartInputDto, AddCartOutputDto } from './dtos/add-cart.dto';
+import { AddCartInputDto } from './dtos/add-cart.dto';
 import { UpdateCartInputDto } from './dtos/update-cart-dto';
+import { CoreOutput } from 'src/common/dtos/output.dto';
 
 @Controller('cart')
 export class CartController {
@@ -22,26 +23,25 @@ export class CartController {
   @UseGuards(JwtAuthGuard)
   @Post('')
   addCart(
-    @Req() request: RequestWithUser,
+    @Req() { user: { id } }: RequestWithUser,
     @Body() addCartInput: AddCartInputDto,
-  ): Promise<AddCartOutputDto> {
-    const { id } = request.user;
+  ): Promise<CoreOutput> {
     addCartInput.userId = id;
-
     return this.cartService.addCart(addCartInput);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('')
-  readCart(@Req() request: RequestWithUser) {
-    const { id } = request.user;
+  readCart(@Req() { user: { id } }: RequestWithUser) {
     return this.cartService.findCart(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':cid(\\d+)')
-  deleteCart(@Req() request: RequestWithUser, @Param('cid') cartId: number) {
-    const { id } = request.user;
+  deleteCart(
+    @Req() { user: { id } }: RequestWithUser,
+    @Param('cid') cartId: number,
+  ) {
     return this.cartService.deleteCart(id, cartId);
   }
 
