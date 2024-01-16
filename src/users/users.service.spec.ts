@@ -3,6 +3,7 @@ import { UserService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { Address } from './entities/user-address.entity';
 
 const mockRepository = () => ({
   findOne: jest.fn(),
@@ -22,6 +23,7 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 describe('UserService', () => {
   let service: UserService;
   let usersRepository: MockRepository<User>;
+  let addressesRepository: MockRepository<Address>;
 
   beforeAll(async () => {
     const modules = await Test.createTestingModule({
@@ -31,10 +33,15 @@ describe('UserService', () => {
           provide: getRepositoryToken(User),
           useValue: mockRepository(),
         },
+        {
+          provide: getRepositoryToken(Address),
+          useValue: mockRepository(),
+        },
       ],
     }).compile();
     service = modules.get<UserService>(UserService);
     usersRepository = modules.get(getRepositoryToken(User));
+    addressesRepository = modules.get(getRepositoryToken(Address));
   });
 
   it('should be defined', () => {
@@ -165,4 +172,9 @@ describe('UserService', () => {
       expect(result).toEqual({ success: false, error: "Couldn't find user" });
     });
   });
+
+  it.todo('addAddress');
+  it.todo('readAddress');
+  it.todo('deleteAddress');
+  it.todo('updateAddress');
 });

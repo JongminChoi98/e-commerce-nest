@@ -9,7 +9,7 @@ const mockRepository = () => ({
   createQueryBuilder: jest.fn(),
 });
 
-const mockProduct = (id: number): Product => {
+const mockProduct = (id: number) => {
   const category = new ProductCategory();
   category.id = 1;
   category.name = 'Example Category';
@@ -24,7 +24,7 @@ const mockProduct = (id: number): Product => {
     createdAt: new Date(),
     updatedAt: new Date(),
     deletedAt: null,
-  } as Product;
+  };
 };
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;

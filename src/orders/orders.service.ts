@@ -63,9 +63,9 @@ export class OrdersService {
       const orders = await this.orderItems
         .createQueryBuilder('order_items')
         .innerJoinAndSelect(
-          'order_details', // This should be the name of the relation as defined in your entity
-          'details', // Alias for the joined table
-          'details.id = order_items.orderId', // Join condition
+          'order_details',
+          'details',
+          'details.id = order_items.orderId',
         )
         .where('details.userId = :userId', { userId })
         .orderBy('order_items.updatedAt', 'ASC')
