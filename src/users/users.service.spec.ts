@@ -10,6 +10,7 @@ const mockRepository = () => ({
   save: jest.fn(),
   create: jest.fn(),
   findOneOrFail: jest.fn(),
+  createQueryBuilder: jest.fn(),
 });
 
 jest.mock('src/utils/hash-password', () => ({
@@ -173,8 +174,149 @@ describe('UserService', () => {
     });
   });
 
-  it.todo('addAddress');
-  it.todo('readAddress');
-  it.todo('deleteAddress');
-  it.todo('updateAddress');
+  describe('addAddress', () => {
+    const addressArgs = {
+      addressLine1: 'Address Line 1',
+      addressLine2: 'Address Line 2',
+      city: 'City',
+      postalCode: 99999,
+      country: 'USA',
+    };
+    it('should fail when use already has address', async () => {
+      usersRepository.findOne.mockResolvedValue({
+        hasAddress: true,
+      });
+
+      const result = await service.addAddress(addressArgs, 1);
+      expect(result).toEqual({ success: false, error: 'Address exist.' });
+    });
+
+    it('should create an address', async () => {
+      usersRepository.findOne.mockResolvedValue({ hasAddress: false });
+
+      const result = await service.addAddress(addressArgs, 1);
+      expect(result).toEqual({ success: true });
+    });
+
+    it('should fail on exception', async () => {
+      usersRepository.findOne.mockRejectedValue(new Error());
+      const result = await service.addAddress(addressArgs, 1);
+      expect(result).toEqual({
+        success: false,
+        error: "Couldn't create address",
+      });
+    });
+  });
+
+  describe('readAddress', () => {
+    const address = {
+      addressLine1: 'Address Line 1',
+      addressLine2: 'Address Line 2',
+      city: 'City',
+      postalCode: 99999,
+      country: 'USA',
+    };
+    it('should read user address', async () => {
+      addressesRepository.findOneOrFail.mockResolvedValue(address);
+      const result = await service.readAddress(1);
+      expect(result).toEqual({ success: true, address });
+    });
+
+    it('should fail on exception', async () => {
+      addressesRepository.findOneOrFail.mockRejectedValue(new Error());
+      const result = await service.readAddress(1);
+      expect(result).toEqual({
+        success: false,
+        error: "Couldn't find address",
+      });
+    });
+  });
+
+  describe('deleteAddress', () => {
+    const mockUserId = 1;
+    const mockUserWithAddress = { id: mockUserId, hasAddress: true };
+
+    const setupMockQueryBuilder = () => {
+      const queryBuilderMock = {
+        delete: jest.fn().mockReturnThis(),
+        from: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockReturnThis(),
+      };
+      addressesRepository.createQueryBuilder.mockReturnValue(queryBuilderMock);
+      return queryBuilderMock;
+    };
+
+    it('should fail when user not has address', async () => {
+      usersRepository.findOne.mockResolvedValue({ hasAddress: false });
+      const result = await service.deleteAddress(1);
+      expect(result).toEqual({ success: false, error: 'Address not exist' });
+    });
+
+    it('should delete user address information', async () => {
+      usersRepository.findOne.mockResolvedValue(mockUserWithAddress);
+      const queryBuilderMock = setupMockQueryBuilder();
+
+      const result = await service.deleteAddress(mockUserId);
+
+      expect(usersRepository.findOne).toHaveBeenCalledWith({
+        where: { id: mockUserId },
+      });
+      expect(queryBuilderMock.delete).toHaveBeenCalled();
+      expect(queryBuilderMock.from).toHaveBeenCalledWith(Address);
+      expect(queryBuilderMock.where).toHaveBeenCalledWith('userId = :id', {
+        id: mockUserId,
+      });
+      expect(queryBuilderMock.execute).toHaveBeenCalled();
+      expect(usersRepository.save).toHaveBeenCalledWith({
+        ...mockUserWithAddress,
+        hasAddress: false,
+      });
+      expect(result).toEqual({ success: true });
+    });
+
+    it('should fail on exception', async () => {
+      usersRepository.findOne.mockRejectedValue(new Error());
+      const result = await service.deleteAddress(1);
+      expect(result).toEqual({
+        success: false,
+        error: 'Unknown error has occurred.',
+      });
+    });
+  });
+
+  describe('updateAddress', () => {
+    const oldAddress = {
+      addressLine1: 'Old address Line 1',
+      addressLine2: 'Ole address Line 2',
+      city: 'Old city',
+      postalCode: 99999,
+      country: 'USA',
+    };
+    const updateAddress = {
+      addressLine1: 'New address Line 1',
+      addressLine2: 'New address Line 2',
+      city: 'New City',
+      postalCode: 99999,
+      country: 'USA',
+    };
+    const newAddress = Object.assign(oldAddress, updateAddress);
+
+    it('should update the address information', async () => {
+      addressesRepository.findOneOrFail.mockResolvedValue(oldAddress);
+      addressesRepository.save.mockResolvedValue(newAddress);
+
+      const result = await service.updateAddress(1, updateAddress);
+      expect(result).toEqual({ success: true });
+    });
+
+    it('should fail on exception', async () => {
+      addressesRepository.findOneOrFail.mockRejectedValue(new Error());
+      const result = await service.updateAddress(1, updateAddress);
+      expect(result).toEqual({
+        success: false,
+        error: 'Unknown error has occurred.',
+      });
+    });
+  });
 });

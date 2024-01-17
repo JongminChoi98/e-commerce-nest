@@ -106,7 +106,7 @@ export class UserService {
         return { success: false, error: 'Address exist.' };
       }
 
-      const address = await this.addresses.create({
+      const address = this.addresses.create({
         addressLine1,
         addressLine2,
         city,
